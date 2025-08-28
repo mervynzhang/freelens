@@ -5,31 +5,33 @@
  */
 
 import "./nodes.scss";
-import type { Node } from "@freelensapp/kube-object";
+
 import { formatNodeTaint } from "@freelensapp/kube-object";
 import { Tooltip, TooltipPosition } from "@freelensapp/tooltip";
-import { bytesToUnits, cssNames, interval } from "@freelensapp/utilities";
+import { bytesToUnits, interval } from "@freelensapp/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import kebabCase from "lodash/kebabCase";
-import upperFirst from "lodash/upperFirst";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
+import requestAllNodeMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
+import eventStoreInjectable from "../events/store.injectable";
+import { KubeObjectAge } from "../kube-object/age";
+import { KubeObjectConditionsList } from "../kube-object-conditions";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { TabLayout } from "../layout/tab-layout-2";
+import { LineProgress } from "../line-progress";
+import { WithTooltip } from "../with-tooltip";
+import nodeStoreInjectable from "./store.injectable";
+
+import type { Node } from "@freelensapp/kube-object";
+
 import type {
   NodeMetricData,
   RequestAllNodeMetrics,
 } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
-import requestAllNodeMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
-import { Badge } from "../badge/badge";
 import type { EventStore } from "../events/store";
-import eventStoreInjectable from "../events/store.injectable";
-import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { KubeObjectAge } from "../kube-object/age";
-import { TabLayout } from "../layout/tab-layout-2";
-import { LineProgress } from "../line-progress";
 import type { NodeStore } from "./store";
-import nodeStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -41,6 +43,7 @@ enum columnId {
   roles = "roles",
   age = "age",
   version = "version",
+  internalIp = "internalIp",
   status = "status",
 }
 
@@ -51,6 +54,7 @@ interface UsageArgs {
   title: string;
   metricNames: [keyof NodeMetricData, keyof NodeMetricData];
   formatters: MetricsTooltipFormatter[];
+  usageText?: string;
 }
 
 interface Dependencies {
@@ -59,12 +63,20 @@ interface Dependencies {
   eventStore: EventStore;
 }
 
+function bytesToUnitsAligned(bytes: number): string {
+  if (bytes < 1024) {
+    return `${(bytes / 1024).toFixed(1)}Ki`;
+  }
+  return bytesToUnits(bytes, { precision: 1 }).replace(/B$/, "");
+}
+
 @observer
 class NonInjectedNodesRoute extends React.Component<Dependencies> {
   @observable metrics: NodeMetricData | null = null;
 
   private metricsWatcher = interval(30, () => {
     void (async () => {
+      await this.props.nodeStore.loadKubeMetrics();
       this.metrics = await this.props.requestAllNodeMetrics();
     })();
   });
@@ -104,11 +116,23 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
     });
   }
 
-  private renderUsage({ node, title, metricNames, formatters }: UsageArgs) {
+  getNodeCpuUsage(node: Node) {
+    const metrics = this.props.nodeStore.getNodeKubeMetrics(node);
+
+    return bytesToUnitsAligned(metrics.cpu);
+  }
+
+  getNodeMemoryUsage(node: Node) {
+    const metrics = this.props.nodeStore.getNodeKubeMetrics(node);
+
+    return bytesToUnitsAligned(metrics.memory);
+  }
+
+  private renderUsage({ node, title, metricNames, formatters, usageText }: UsageArgs) {
     const metrics = this.getLastMetricValues(node, metricNames);
 
-    if (!metrics || metrics.length < 2) {
-      return <LineProgress value={0} />;
+    if (!metrics || metrics.length < 2 || metrics[1] == 0) {
+      return <span className="usageText">{usageText ?? "N/A"}</span>;
     }
 
     const [usage, capacity] = metrics;
@@ -119,7 +143,9 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `${title}: ${formatters.map((formatter) => formatter([usage, capacity])).join(", ")}`,
+          children: `${title}: ${(title === "CPU" && usageText ? [usageText] : [])
+            .concat(formatters.map((formatter) => formatter([usage, capacity])))
+            .join(", ")}`,
         }}
       />
     );
@@ -131,6 +157,7 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
       title: "CPU",
       metricNames: ["cpuUsage", "cpuCapacity"],
       formatters: [([usage, capacity]) => `${((usage * 100) / capacity).toFixed(2)}%`, ([, cap]) => `cores: ${cap}`],
+      usageText: this.getNodeCpuUsage(node),
     });
   }
 
@@ -143,6 +170,7 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
         ([usage, capacity]) => `${((usage * 100) / capacity).toFixed(2)}%`,
         ([usage]) => bytesToUnits(usage, { precision: 3 }),
       ],
+      usageText: this.getNodeMemoryUsage(node),
     });
   }
 
@@ -155,31 +183,6 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
         ([usage, capacity]) => `${((usage * 100) / capacity).toFixed(2)}%`,
         ([usage]) => bytesToUnits(usage, { precision: 3 }),
       ],
-    });
-  }
-
-  renderConditions(node: Node) {
-    if (!node.status?.conditions) {
-      return null;
-    }
-
-    return node.getActiveConditions().map((condition) => {
-      const { type } = condition;
-      const tooltipId = `node-${node.getName()}-condition-${type}`;
-
-      return (
-        <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
-          {type}
-          <Tooltip targetId={tooltipId} formatters={{ tableView: true }}>
-            {Object.entries(condition).map(([key, value]) => (
-              <div key={key} className="flex gaps align-center">
-                <div className="name">{upperFirst(key)}</div>
-                <div className="value">{value}</div>
-              </div>
-            ))}
-          </Tooltip>
-        </div>
-      );
     });
   }
 
@@ -204,14 +207,17 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
             [columnId.conditions]: (node) => node.getNodeConditionText(),
             [columnId.taints]: (node) => node.getTaints().length,
             [columnId.roles]: (node) => node.getRoleLabels(),
-            [columnId.age]: (node) => -node.getCreationTimestamp(),
             [columnId.version]: (node) => node.getKubeletVersion(),
+            [columnId.internalIp]: (node) => node.getInternalIP(),
+            [columnId.age]: (node) => -node.getCreationTimestamp(),
           }}
           searchFilters={[
             (node) => node.getSearchFields(),
             (node) => node.getRoleLabels(),
             (node) => node.getKubeletVersion(),
             (node) => node.getNodeConditionText(),
+            (node) => node.getInternalIP(),
+            (node) => node.getExternalIP(),
           ]}
           renderHeaderTitle="Nodes"
           renderTableHeader={[
@@ -223,15 +229,21 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
             { title: "Taints", className: "taints", sortBy: columnId.taints, id: columnId.taints },
             { title: "Roles", className: "roles", sortBy: columnId.roles, id: columnId.roles },
             { title: "Version", className: "version", sortBy: columnId.version, id: columnId.version },
+            { title: "Internal IP", className: "internalIp", sortBy: columnId.internalIp, id: columnId.internalIp },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
-            { title: "Conditions", className: "conditions", sortBy: columnId.conditions, id: columnId.conditions },
+            {
+              title: "Conditions",
+              className: "conditions scrollable",
+              sortBy: columnId.conditions,
+              id: columnId.conditions,
+            },
           ]}
           renderTableContents={(node) => {
             const tooltipId = `node-taints-${node.getId()}`;
             const taints = node.getTaints();
 
             return [
-              <Badge flat key="name" label={node.getName()} tooltip={node.getName()} />,
+              <WithTooltip>{node.getName()}</WithTooltip>,
               <KubeObjectStatusIcon key="icon" object={node} />,
               this.renderCpuUsage(node),
               this.renderMemoryUsage(node),
@@ -242,10 +254,11 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
                   {taints.map(formatNodeTaint).join("\n")}
                 </Tooltip>
               </>,
-              node.getRoleLabels(),
-              node.getKubeletVersion(),
+              <WithTooltip>{node.getRoleLabels()}</WithTooltip>,
+              <WithTooltip>{node.getKubeletVersion()}</WithTooltip>,
+              <WithTooltip>{node.getInternalIP()}</WithTooltip>,
               <KubeObjectAge key="age" object={node} />,
-              this.renderConditions(node),
+              <KubeObjectConditionsList key="conditions" object={node} />,
             ];
           }}
         />

@@ -4,7 +4,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import path from "path";
 import corePackageJson from "@freelensapp/core/package.json";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import CircularDependencyPlugin from "circular-dependency-plugin";
@@ -13,10 +12,12 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
-import type webpack from "webpack";
-import type { WebpackPluginInstance } from "webpack";
+import path from "path";
 import { DefinePlugin } from "webpack";
 import { assetsFolderName, buildDir, htmlTemplate, isDevelopment, publicPath, rendererDir } from "./vars";
+
+import type webpack from "webpack";
+import type { WebpackPluginInstance } from "webpack";
 
 const renderer: webpack.Configuration = {
   target: "electron-renderer",
@@ -48,14 +49,14 @@ const renderer: webpack.Configuration = {
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
-  async externals({ request }) {
+  async externals({ request }: { request?: string }) {
     const externalModulesRegex =
-      /^(byline|isomorphic-ws|js-yam|node:|npm|openid-client|pnpm|request|rfc4648|stream-buffers|tar|tslib|win-ca)/;
+      /^(byline|isomorphic-ws|js-yam|node:|npm|openid-client|pnpm|request|rfc4648|stream-buffers|tar|tslib)/;
 
-    if (externalModulesRegex.test(request)) {
-      return Promise.resolve(`node-commonjs ${request}`);
+    if (typeof request === "string" && externalModulesRegex.test(request)) {
+      return `node-commonjs ${request}`;
     }
-    return Promise.resolve();
+    return;
   },
   optimization: {
     minimize: false,

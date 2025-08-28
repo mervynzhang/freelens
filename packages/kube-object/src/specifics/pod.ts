@@ -5,7 +5,10 @@
  */
 
 import { isDefined } from "@freelensapp/utilities";
+import { KubeObject } from "../kube-object";
+
 import type { RequireExactlyOne } from "type-fest";
+
 import type {
   Affinity,
   KubeObjectMetadata,
@@ -13,8 +16,16 @@ import type {
   NamespaceScopedMetadata,
   Toleration,
 } from "../api-types";
-import { KubeObject } from "../kube-object";
-import type { Container, ObjectFieldSelector, PodSecurityContext, Probe, ResourceFieldSelector } from "../types";
+import type {
+  Container,
+  ContainerWithType,
+  EphemeralContainer,
+  EphemeralContainerWithType,
+  ObjectFieldSelector,
+  PodSecurityContext,
+  Probe,
+  ResourceFieldSelector,
+} from "../types";
 import type { PersistentVolumeClaimSpec } from "./persistent-volume-claim";
 import type { SecretReference } from "./secret";
 
@@ -545,7 +556,7 @@ export interface PodSpec {
   containers?: Container[];
   dnsPolicy?: string;
   enableServiceLinks?: boolean;
-  ephemeralContainers?: unknown[];
+  ephemeralContainers?: EphemeralContainer[];
   hostAliases?: HostAlias[];
   hostIPC?: boolean;
   hostname?: string;
@@ -560,7 +571,7 @@ export interface PodSpec {
   priority?: number;
   priorityClassName?: string;
   readinessGates?: unknown[];
-  restartPolicy?: string;
+  restartPolicy?: "Always" | "OnFailure" | "Never";
   runtimeClassName?: string;
   schedulerName?: string;
   securityContext?: PodSecurityContext;
@@ -596,8 +607,11 @@ export interface PodStatus {
   initContainerStatuses?: PodContainerStatus[];
   containerStatuses?: PodContainerStatus[];
   qosClass?: string;
+  ephemeralContainerStatuses?: PodContainerStatus[];
   reason?: string;
 }
+
+export type ContainersType = "containers" | "initContainers" | "ephemeralContainers";
 
 export class Pod extends KubeObject<NamespaceScopedMetadata, PodStatus, PodSpec> {
   static kind = "Pod";
@@ -610,36 +624,84 @@ export class Pod extends KubeObject<NamespaceScopedMetadata, PodStatus, PodSpec>
     return Object.keys(this.getAffinity()).length;
   }
 
-  getInitContainers() {
+  getInitContainers(): Container[] {
     return this.spec?.initContainers ?? [];
   }
 
-  getContainers() {
+  getInitContainersWithType(): ContainerWithType[] {
+    return (this.spec?.initContainers ?? []).map((c) => ({ ...c, type: "initContainers" }));
+  }
+
+  getEphemeralContainers(): Container[] {
+    return this.spec?.ephemeralContainers ?? [];
+  }
+
+  getEphemeralContainersWithType(): EphemeralContainerWithType[] {
+    return (this.spec?.ephemeralContainers ?? []).map((c) => ({ ...c, type: "ephemeralContainers" }));
+  }
+
+  getContainers(): Container[] {
     return this.spec?.containers ?? [];
   }
 
-  getAllContainers() {
-    return [...this.getContainers(), ...this.getInitContainers()];
+  getContainersWithType(): ContainerWithType[] {
+    return (this.spec?.containers ?? []).map((c) => ({ ...c, type: "containers" }));
   }
 
-  getRunningContainers() {
+  getAllContainers(): (Container | EphemeralContainer)[] {
+    return [...this.getContainers(), ...this.getInitContainers(), ...this.getEphemeralContainers()];
+  }
+
+  getAllContainersWithType(): (ContainerWithType | EphemeralContainerWithType)[] {
+    return [
+      ...this.getContainersWithType(),
+      ...this.getInitContainersWithType(),
+      ...this.getEphemeralContainersWithType(),
+    ];
+  }
+
+  getRunningContainers(): (Container | EphemeralContainer)[] {
+    const ephemeralContainers = this.getEphemeralContainers();
     const runningContainerNames = new Set(
       this.getContainerStatuses()
-        .filter(({ state }) => state?.running)
+        .filter(
+          ({ name, lastState, state }) =>
+            state?.running && !(ephemeralContainers.find((c) => c.name === name) && lastState?.terminated),
+        )
         .map(({ name }) => name),
     );
 
     return this.getAllContainers().filter(({ name }) => runningContainerNames.has(name));
   }
 
-  getContainerStatuses(includeInitContainers = true): PodContainerStatus[] {
-    const { containerStatuses = [], initContainerStatuses = [] } = this.status ?? {};
+  getRunningContainersWithType(): (ContainerWithType | EphemeralContainerWithType)[] {
+    const ephemeralContainers = this.getEphemeralContainers();
+    const runningContainerNames = new Set(
+      this.getContainerStatuses()
+        .filter(
+          ({ name, lastState, state }) =>
+            state?.running && !(ephemeralContainers.find((c) => c.name === name) && lastState?.terminated),
+        )
+        .map(({ name }) => name),
+    );
+
+    return this.getAllContainersWithType().filter(({ name }) => runningContainerNames.has(name));
+  }
+
+  getContainerStatuses(includeInitContainers = true, includeEphemeralContainers = true): PodContainerStatus[] {
+    const { containerStatuses = [], initContainerStatuses = [], ephemeralContainerStatuses = [] } = this.status ?? {};
+
+    let statuses = [...containerStatuses];
 
     if (includeInitContainers) {
-      return [...containerStatuses, ...initContainerStatuses];
+      statuses = statuses.concat(...initContainerStatuses);
     }
 
-    return [...containerStatuses];
+    if (includeEphemeralContainers) {
+      statuses = statuses.concat(...ephemeralContainerStatuses);
+    }
+
+    return statuses;
   }
 
   getRestartsCount(): number {

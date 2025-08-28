@@ -7,6 +7,7 @@
 // Pods
 $pod-status-running-color: var(--colorOk);
 $pod-status-pending-color: var(--colorWarning);
+$pod-status-restarted-color: var(--colorOk);
 $pod-status-evicted-color: var(--colorError);
 $pod-status-succeeded-color: var(--colorSuccess);
 $pod-status-failed-color: var(--colorError);
@@ -22,6 +23,7 @@ $pod-unschedulable: var(--colorError);
 $pod-containers-ready: var(--colorInfo);
 $pod-error: var(--colorError);
 $pod-container-creating: var(--colorInfo);
+$pod-container-ephemeral: var(--colorInfo);
 
 // Deployments
 $deployment-available: var(--colorOk);
@@ -40,6 +42,7 @@ $cronjob-suspended: var(--colorTerminated);
 $pod-status-color-list: (
   running: $pod-status-running-color,
   pending: $pod-status-pending-color,
+  restarted: $pod-status-restarted-color,
   evicted: $pod-status-evicted-color,
   waiting: $pod-status-pending-color,
   succeeded: $pod-status-succeeded-color,
@@ -50,18 +53,19 @@ $pod-status-color-list: (
   crash-loop-back-off: $pod-status-crash-loop-color,
   error: $pod-error,
   container-creating: $pod-container-creating,
+  container-ephemeral: $pod-container-ephemeral,
 );
 
 // Job Conditions
 $job-condition-color-list: (
-  complete: $job-complete,
-  failed: $job-failed,
+  Complete: $job-complete,
+  Failed: $job-failed,
 );
 
 // Cronjob Conditions
 $cronjob-condition-color-list: (
-  scheduled: $cronjob-scheduled,
-  suspended: $cronjob-suspended,
+  Scheduled: $cronjob-scheduled,
+  Suspended: $cronjob-suspended,
 );
 
 @mixin pod-status-bgs {

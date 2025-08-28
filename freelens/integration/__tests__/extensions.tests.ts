@@ -4,8 +4,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ElectronApplication, Page } from "playwright";
 import * as utils from "../helpers/utils";
+
+import type { ElectronApplication, Page } from "playwright";
 
 describe("extensions page tests", () => {
   let window: Page;
@@ -30,7 +31,9 @@ describe("extensions page tests", () => {
   const extensions = process.env.EXTENSION_PATH
     ? [process.env.EXTENSION_PATH]
     : [
-        "@freelensapp/extension-example",
+        "@freelensapp/example-extension",
+        "@freelensapp/example-extension@1.3.0",
+        "@freelensapp/extension-example@1.2.0",
         "@freelensapp/extension-example@1.0.0",
         "@freelensapp/freelens-node-pod-menu",
         "@freelensapp/freelens-node-pod-menu@1.1.0",

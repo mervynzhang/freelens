@@ -6,7 +6,6 @@
 
 import "./pod-details.scss";
 
-import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "@freelensapp/kube-api";
 import {
   nodeApiInjectable,
   priorityClassApiInjectable,
@@ -14,9 +13,8 @@ import {
   serviceAccountApiInjectable,
 } from "@freelensapp/kube-api-specifics";
 import { Pod } from "@freelensapp/kube-object";
-import type { Logger } from "@freelensapp/logger";
 import { loggerInjectionToken } from "@freelensapp/logger";
-import { cssNames, stopPropagation } from "@freelensapp/utilities";
+import { cssNames, formatDuration, stopPropagation } from "@freelensapp/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
@@ -24,15 +22,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
-import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { KubeObjectConditionsDrawer } from "../kube-object-conditions";
 import { PodDetailsContainers } from "./details/containers/pod-details-containers";
+import { PodDetailsEphemeralContainers } from "./details/containers/pod-details-ephemeral-containers";
 import { PodDetailsInitContainers } from "./details/containers/pod-details-init-containers";
 import { PodVolumes } from "./details/volumes/view";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
+
+import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "@freelensapp/kube-api";
+import type { Logger } from "@freelensapp/logger";
+
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {}
 
@@ -61,7 +65,7 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
     }
 
     const { status, spec } = pod;
-    const { conditions = [], podIP } = status ?? {};
+    const { podIP } = status ?? {};
     const podIPs = pod.getIPs();
     const { nodeName } = spec ?? {};
     const nodeSelector = pod.getNodeSelectors();
@@ -118,16 +122,8 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
             {runtimeClassName}
           </Link>
         </DrawerItem>
-
-        <DrawerItem name="Conditions" className="conditions" hidden={conditions.length === 0} labelsOnly>
-          {conditions.map(({ type, status, lastTransitionTime }) => (
-            <Badge
-              key={type}
-              label={type}
-              disabled={status === "False"}
-              tooltip={`Last transition time: ${lastTransitionTime ?? "<unknown>"}`}
-            />
-          ))}
+        <DrawerItem name="Termination Grace Period">
+          {formatDuration((pod.spec.terminationGracePeriodSeconds ?? 30) * 1000, false)}
         </DrawerItem>
 
         <DrawerItem name="Node Selector" hidden={nodeSelector.length === 0}>
@@ -143,9 +139,13 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
           <PodDetailsSecrets pod={pod} />
         </DrawerItem>
 
+        <KubeObjectConditionsDrawer object={pod} />
+
         <PodDetailsInitContainers pod={pod} />
 
         <PodDetailsContainers pod={pod} />
+
+        <PodDetailsEphemeralContainers pod={pod} />
 
         <PodVolumes pod={pod} />
       </div>

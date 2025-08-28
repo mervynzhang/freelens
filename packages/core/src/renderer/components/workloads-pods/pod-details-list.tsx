@@ -6,7 +6,6 @@
 
 import "./pod-details-list.scss";
 
-import type { KubeObject, Pod } from "@freelensapp/kube-object";
 import { Spinner } from "@freelensapp/spinner";
 import { bytesToUnits, cssNames, interval, prevDefault } from "@freelensapp/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -16,13 +15,17 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { DrawerTitle } from "../drawer";
-import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
 import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import type { PodStore } from "./store";
+import { WithTooltip } from "../with-tooltip";
 import podStoreInjectable from "./store.injectable";
+
+import type { KubeObject, Pod } from "@freelensapp/kube-object";
+
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import type { PodStore } from "./store";
 
 enum sortBy {
   name = "name",
@@ -106,7 +109,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
     return <LineProgress max={maxMemory} value={usage} tooltip={usage != 0 ? tooltip : null} />;
   }
 
-  getTableRow(uid: string) {
+  getTableRow(uid: string, hideNode = false) {
     const { pods, podStore, showDetails } = this.props;
     const pod = pods.find((pod) => pod.getId() == uid);
 
@@ -118,12 +121,20 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
 
     return (
       <TableRow key={pod.getId()} sortItem={pod} nowrap onClick={prevDefault(() => showDetails(pod.selfLink, false))}>
-        <TableCell className="name">{pod.getName()}</TableCell>
+        <TableCell className="name">
+          <WithTooltip>{pod.getName()}</WithTooltip>
+        </TableCell>
         <TableCell className="warning">
           <KubeObjectStatusIcon key="icon" object={pod} />
         </TableCell>
-        <TableCell className="node">{pod.getNodeName()}</TableCell>
-        <TableCell className="namespace">{pod.getNs()}</TableCell>
+        {hideNode || (
+          <TableCell className="node">
+            <WithTooltip>{pod.getNodeName()}</WithTooltip>
+          </TableCell>
+        )}
+        <TableCell className="namespace">
+          <WithTooltip>{pod.getNs()}</WithTooltip>
+        </TableCell>
         <TableCell className="ready">
           {`${pod.getRunningContainers().length} / ${pod.getContainers().length}`}
         </TableCell>
@@ -137,7 +148,9 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
   }
 
   render() {
-    const { pods, podStore } = this.props;
+    const { owner, pods, podStore } = this.props;
+
+    const hideNode = owner.kind === "Node";
 
     if (!podStore.isLoaded) {
       return (
@@ -174,7 +187,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          renderRow={virtual ? undefined : (pod) => this.getTableRow(pod.getId())}
+          renderRow={virtual ? undefined : (pod) => this.getTableRow(pod.getId(), hideNode)}
           className="box grow"
         >
           <TableHead flat sticky={virtual}>
@@ -182,9 +195,11 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
               Name
             </TableCell>
             <TableCell className="warning" />
-            <TableCell className="node" sortBy={sortBy.node}>
-              Node
-            </TableCell>
+            {hideNode || (
+              <TableCell className="node" sortBy={sortBy.node}>
+                Node
+              </TableCell>
+            )}
             <TableCell className="namespace" sortBy={sortBy.namespace}>
               Namespace
             </TableCell>

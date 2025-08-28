@@ -4,8 +4,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { editor } from "monaco-editor";
 import { defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../../../common/vars";
+
+import type { editor } from "monaco-editor";
+
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
@@ -105,4 +107,4 @@ export type UserStoreFlatModel = {
 
 export type UserPreferencesModel = {
   [field in keyof PreferenceDescriptors]?: PreferencesModelType<field>;
-} & { updateChannel: string };
+};

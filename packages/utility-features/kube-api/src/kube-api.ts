@@ -6,8 +6,22 @@
 
 // Base class for building all kubernetes apis
 
+import {
+  isJsonApiData,
+  isJsonApiDataList,
+  isKubeStatusData,
+  isPartialJsonApiData,
+  KubeStatus,
+} from "@freelensapp/kube-object";
+import { isDefined, noop, WrappedAbortController } from "@freelensapp/utilities";
 import assert from "assert";
+import byline from "byline";
+import { merge } from "lodash";
+import { matches } from "lodash/fp";
+import { makeObservable, observable } from "mobx";
 import { stringify } from "querystring";
+import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
+
 import type {
   KubeJsonApiData,
   KubeJsonApiDataFor,
@@ -16,26 +30,15 @@ import type {
   KubeObjectMetadata,
   KubeObjectScope,
   Scale,
+  ScaleCreateOptions,
 } from "@freelensapp/kube-object";
-import {
-  KubeStatus,
-  isJsonApiData,
-  isJsonApiDataList,
-  isKubeStatusData,
-  isPartialJsonApiData,
-} from "@freelensapp/kube-object";
-import type { ScaleCreateOptions } from "@freelensapp/kube-object";
 import type { LogFunction } from "@freelensapp/logger";
 import type { RequestInit, Response } from "@freelensapp/node-fetch";
 import type { Disposer } from "@freelensapp/utilities";
-import { WrappedAbortController, isDefined, noop } from "@freelensapp/utilities";
-import byline from "byline";
-import { merge } from "lodash";
-import { matches } from "lodash/fp";
-import { makeObservable, observable } from "mobx";
+
 import type { Patch } from "rfc6902";
 import type { PartialDeep } from "type-fest";
-import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
+
 import type { KubeJsonApi } from "./kube-json-api";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 
@@ -601,7 +604,7 @@ export class KubeApi<
 
   async create(
     { name, namespace }: Partial<ResourceDescriptor>,
-    partialData?: PartialDeep<Object>,
+    partialData?: PartialDeep<Object, { recurseIntoArrays: true }>,
   ): Promise<Object | null> {
     await this.checkPreferredVersion();
 
@@ -715,15 +718,6 @@ export class KubeApi<
     }
 
     return parsed;
-  }
-
-  /**
-   * Some k8s resources might implement special "delete" (e.g. pod.api)
-   * See also: https://kubernetes.io/docs/concepts/scheduling-eviction/api-eviction/
-   * By default should work same as delete()
-   */
-  async evict(desc: DeleteResourceDescriptor): Promise<KubeStatus | KubeObject | unknown> {
-    return this.delete(desc);
   }
 
   async delete({ propagationPolicy = "Background", ...desc }: DeleteResourceDescriptor) {

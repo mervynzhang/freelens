@@ -9,15 +9,17 @@ import "./resource-quotas.scss";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React from "react";
+import { KubeObjectAge } from "../kube-object/age";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { KubeObjectAge } from "../kube-object/age";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
+import { WithTooltip } from "../with-tooltip";
 import openAddQuotaDialogInjectable from "./add-dialog/open.injectable";
 import { AddQuotaDialog } from "./add-dialog/view";
-import type { ResourceQuotaStore } from "./store";
 import resourceQuotaStoreInjectable from "./store.injectable";
+
+import type { ResourceQuotaStore } from "./store";
 
 enum columnId {
   name = "name",
@@ -57,7 +59,7 @@ class NonInjectedResourceQuotas extends React.Component<Dependencies> {
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(resourceQuota) => [
-            resourceQuota.getName(),
+            <WithTooltip>{resourceQuota.getName()}</WithTooltip>,
             <KubeObjectStatusIcon key="icon" object={resourceQuota} />,
             <NamespaceSelectBadge key="namespace" namespace={resourceQuota.getNs()} />,
             <KubeObjectAge key="age" object={resourceQuota} />,

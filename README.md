@@ -3,8 +3,11 @@
 <!-- markdownlint-disable MD013 -->
 
 [![Home](https://img.shields.io/badge/%F0%9F%8F%A0-freelens.app-02a7a0)](https://freelens.app)
-[![GitHub](https://img.shields.io/github/stars/freelensapp/freelens?style=flat&label=GitHub%20%E2%AD%90)](https://github.com/freelensapp/freelens)
+[![GitHub](https://img.shields.io/github/stars/freelensapp/freelens?style=flat&label=GitHub%20%E2%AD%90&logo=github)](https://github.com/freelensapp/freelens)
 [![Discord](https://img.shields.io/badge/dynamic/json?color=blue&label=Discord&style=flat&query=approximate_member_count&url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2F%2FNjKZERK95Y%3Fwith_counts%3Dtrue&logo=discord)](https://discord.gg/NjKZERK95Y)
+[![Subreddit](https://img.shields.io/reddit/subreddit-subscribers/freelens?style=flat&label=r%2Ffreelens&logo=reddit)](https://www.reddit.com/r/freelens/)
+[![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/freelensapp/freelens)
+[![LFX Health Score](https://insights.linuxfoundation.org/api/badge/health-score?project=freelens)](https://insights.linuxfoundation.org/project/freelens)
 [![license](https://img.shields.io/github/license/freelensapp/freelens.svg)](https://github.com/freelensapp/freelens?tab=MIT-1-ov-file#readme)
 [![release](https://img.shields.io/github/v/release/freelensapp/freelens?display_name=tag&sort=semver)](https://github.com/freelensapp/freelens/releases/latest)
 [![Homebrew Cask Version](https://img.shields.io/homebrew/cask/v/freelens?label=homebrew)](https://formulae.brew.sh/cask/freelens#default)
@@ -191,13 +194,14 @@ Scoop uses MSI package to install the application.
 ## Development
 
 Visit [Development](https://github.com/freelensapp/freelens/wiki/Development)
-wiki page to see how to build the application from source.
+wiki page to see how to build the application from source.  
+Check out the [Freelens Docs](https://freelensapp.github.io/docs/) to contribute to development or create your own extension.
 
 ## Extensions
 
 Anyone can develop extensions for Freelens and many extensions previously used
-with Open Lens have already been converted. Visit
-[Extensions](https://github.com/freelensapp/freelens/wiki/Extensions) wiki
+with Open Lens have already been converted.  
+Visit [Extensions](https://github.com/freelensapp/freelens/wiki/Extensions) wiki
 page to see them and write in the [appropriate
 discussion](https://github.com/freelensapp/freelens/discussions/117) if you
 also want to propose yours.
@@ -209,6 +213,8 @@ Get updates about Freelens & keep in touch with our community
 - Follow us on [LinkedIn](https://www.linkedin.com/company/freelensapp/)
 - Join our [Discussions](https://github.com/freelensapp/freelens/discussions)
 - Chat on [Discord](https://discord.gg/NjKZERK95Y)
+- Discuss on [Reddit](https://www.reddit.com/r/freelens/)
+- Watch us on [YouTube](https://www.youtube.com/@Freelensapp)
 - Read our [Wiki](https://github.com/freelensapp/freelens/wiki)
 - Open an [Issue](https://github.com/freelensapp/freelens/issues)
 

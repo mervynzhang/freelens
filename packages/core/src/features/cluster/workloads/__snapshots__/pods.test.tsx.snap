@@ -288,6 +288,7 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -306,6 +307,7 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-kube-object-list-layout-namespace-select-input-placeholder"
                             aria-expanded="false"
@@ -685,12 +687,14 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                               <div
                                 class="TableCell name"
                               >
-                                <span
-                                  data-testid="list-pod-name-uuid-1"
-                                  id="list-pod-name-uuid-1"
+                                <div
+                                  class="badge flat"
                                 >
                                   test-pod-1
-                                </span>
+                                </div>
+                                <div>
+                                  test-pod-1
+                                </div>
                               </div>
                               <div
                                 class="TableCell warning"
@@ -712,7 +716,16 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                               </div>
                               <div
                                 class="TableCell containers"
-                              />
+                              >
+                                <div
+                                  class="StatusBrick"
+                                />
+                                <div />
+                                <div
+                                  class="StatusBrick"
+                                />
+                                <div />
+                              </div>
                               <div
                                 class="TableCell cpu"
                               >
@@ -748,7 +761,14 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                               <div
                                 class="TableCell age"
                               >
-                                &lt;unknown&gt;
+                                <div
+                                  class="badge flat"
+                                >
+                                  &lt;unknown&gt;
+                                </div>
+                                <div>
+                                  2015-10-21T07:28:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell waiting status"
@@ -1248,6 +1268,7 @@ exports[`workloads / pods when navigating to workloads / pods view given no pods
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -1266,6 +1287,7 @@ exports[`workloads / pods when navigating to workloads / pods view given no pods
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-kube-object-list-layout-namespace-select-input-placeholder"
                             aria-expanded="false"
@@ -2088,6 +2110,7 @@ exports[`workloads / pods when navigating to workloads / pods view given pods ar
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -2106,6 +2129,7 @@ exports[`workloads / pods when navigating to workloads / pods view given pods ar
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-kube-object-list-layout-namespace-select-input-placeholder"
                             aria-expanded="false"

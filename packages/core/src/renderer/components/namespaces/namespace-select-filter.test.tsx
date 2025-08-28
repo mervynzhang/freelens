@@ -4,20 +4,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { Namespace } from "@freelensapp/kube-object";
-import type { Disposer } from "@freelensapp/utilities";
 import { disposer } from "@freelensapp/utilities";
-import type { DiContainer } from "@ogre-tools/injectable";
-import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
-import type { Fetch } from "../../../common/fetch/fetch.injectable";
-import fetchInjectable from "../../../common/fetch/fetch.injectable";
+import nodeFetchInjectable from "../../../common/fetch/node-fetch.injectable";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -25,8 +20,16 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./namespace-select-filter";
-import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
+
+import type { Disposer } from "@freelensapp/utilities";
+
+import type { AsyncFnMock } from "@async-fn/jest";
+import type { DiContainer } from "@ogre-tools/injectable";
+import type { RenderResult } from "@testing-library/react";
+
+import type { NodeFetch } from "../../../common/fetch/node-fetch.injectable";
+import type { NamespaceStore } from "./store";
 
 function createNamespace(name: string): Namespace {
   return new Namespace({
@@ -44,7 +47,7 @@ function createNamespace(name: string): Namespace {
 describe("<NamespaceSelectFilter />", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
-  let fetchMock: AsyncFnMock<Fetch>;
+  let fetchMock: AsyncFnMock<NodeFetch>;
   let result: RenderResult;
   let cleanup: Disposer;
 
@@ -57,7 +60,7 @@ describe("<NamespaceSelectFilter />", () => {
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
+    di.override(nodeFetchInjectable, () => fetchMock);
 
     di.override(
       hostedClusterInjectable,

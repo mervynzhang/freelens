@@ -6,9 +6,10 @@
 
 import { object } from "@freelensapp/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
+import k8sRequestInjectable from "./k8s-request.injectable";
+
 import type { Cluster } from "../common/cluster/cluster";
 import type { RequestMetricsParams } from "../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
-import k8sRequestInjectable from "./k8s-request.injectable";
 
 export type GetMetrics = (
   cluster: Cluster,
@@ -25,10 +26,10 @@ const getMetricsInjectable = getInjectable({
     return async (cluster, prometheusPath, queryParams) => {
       const prometheusPrefix = cluster.preferences.prometheus?.prefix || "";
       const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
-      const body = new FormData();
+      const body = new URLSearchParams();
 
       for (const [key, value] of object.entries(queryParams)) {
-        body.set(key, value.toString());
+        body.append(key, value.toString());
       }
 
       return k8sRequest(cluster, metricsPath, {

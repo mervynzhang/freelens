@@ -2,8 +2,11 @@ packages:
   - freelens
   - packages/**
 
+nodeGyp: ../../../../node-gyp/bin/node-gyp.js
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - '@tailwindcss/oxide'
   - core-js-pure
   - electron
   - electron-winstaller
@@ -11,20 +14,19 @@ onlyBuiltDependencies:
   - node-pty
   - playwright
   - sharp
-  - win-ca
 
 overrides:
-  http-proxy: npm:http-proxy-node16@^1.0.0
-  http-proxy-middleware: ^3.0.0
   '@types/http-proxy': '-'
+  compression: ^1.8.1
+  http-proxy-middleware: ^3.0.0
+  http-proxy: npm:http-proxy-node16@^1.0.0
 
 patchedDependencies:
   circular-dependency-plugin: patches/circular-dependency-plugin.patch
   monaco-editor: patches/monaco-editor.patch
+  '@async-fn/jest': patches/@async-fn__jest.patch
 
 publicHoistPattern:
   - node-gyp
-
-nodeGyp: ../../../../node-gyp/bin/node-gyp.js
 
 shellEmulator: true

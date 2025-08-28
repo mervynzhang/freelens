@@ -4,24 +4,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { NamespaceApi } from "@freelensapp/kube-api";
 import { namespaceApiInjectable } from "@freelensapp/kube-api-specifics";
-import type { KubeMetaField } from "@freelensapp/kube-object";
 import { KubeObject } from "@freelensapp/kube-object";
-import type { Logger } from "@freelensapp/logger";
 import { loggerInjectionToken } from "@freelensapp/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import { DurationAbsoluteTimestamp } from "../events";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { KubeObjectAge } from "../kube-object/age";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
+
+import type { NamespaceApi } from "@freelensapp/kube-api";
+import type { KubeMetaField } from "@freelensapp/kube-object";
+import type { Logger } from "@freelensapp/logger";
+
+import type { ApiManager } from "../../../common/k8s-api/api-manager";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -59,7 +62,7 @@ const NonInjectedKubeObjectMeta = observer((props: Dependencies & KubeObjectMeta
 
   const {
     selfLink,
-    metadata: { creationTimestamp },
+    metadata: { creationTimestamp, deletionTimestamp },
   } = object;
   const ownerRefs = object.getOwnerRefs();
   const namespace = object.getNs();
@@ -68,9 +71,18 @@ const NonInjectedKubeObjectMeta = observer((props: Dependencies & KubeObjectMeta
   return (
     <>
       <DrawerItem name="Created" hidden={isHidden("creationTimestamp") || !creationTimestamp}>
-        <KubeObjectAge object={object} compact={false} />
+        <KubeObjectAge object={object} compact={false} withTooltip={false} />
         {" ago "}
-        {creationTimestamp && <LocaleDate date={creationTimestamp} />}
+        {creationTimestamp && (
+          <>
+            {"("}
+            <LocaleDate date={creationTimestamp} />
+            {")"}
+          </>
+        )}
+      </DrawerItem>
+      <DrawerItem name="Deleted" hidden={isHidden("deletionTimestamp") || !deletionTimestamp}>
+        <DurationAbsoluteTimestamp timestamp={deletionTimestamp} />
       </DrawerItem>
       <DrawerItem name="Name" hidden={isHidden("name")}>
         {object.getName()}

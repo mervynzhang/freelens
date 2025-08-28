@@ -6,28 +6,29 @@
 
 import "./services.scss";
 
-import type { Service } from "@freelensapp/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import React from "react";
-import { Badge } from "../badge";
+import { KubeObjectAge } from "../kube-object/age";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { KubeObjectAge } from "../kube-object/age";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
-import type { ServiceStore } from "./store";
+import { WithTooltip } from "../with-tooltip";
 import serviceStoreInjectable from "./store.injectable";
+
+import type { Service } from "@freelensapp/kube-object";
+
+import type { ServiceStore } from "./store";
 
 enum columnId {
   name = "name",
   namespace = "namespace",
-  selector = "selector",
-  ports = "port",
+  type = "type",
   clusterIp = "cluster-ip",
   externalIp = "external-ip",
+  ports = "port",
   age = "age",
-  type = "type",
   status = "status",
 }
 
@@ -62,7 +63,6 @@ class NonInjectedServices extends React.Component<Dependencies> {
           sortingCallbacks={{
             [columnId.name]: (service) => service.getName(),
             [columnId.namespace]: (service) => service.getNs(),
-            [columnId.selector]: (service) => service.getSelector(),
             [columnId.ports]: (service) => (service.spec.ports || []).map(({ port }) => port)[0],
             [columnId.clusterIp]: (service) => service.getClusterIp(),
             [columnId.type]: (service) => service.getType(),
@@ -81,21 +81,19 @@ class NonInjectedServices extends React.Component<Dependencies> {
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
             { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
             { title: "Cluster IP", className: "clusterIp", sortBy: columnId.clusterIp, id: columnId.clusterIp },
-            { title: "Ports", className: "ports", sortBy: columnId.ports, id: columnId.ports },
             { title: "External IP", className: "externalIp", id: columnId.externalIp },
-            { title: "Selector", className: "selector", sortBy: columnId.selector, id: columnId.selector },
+            { title: "Ports", className: "ports", sortBy: columnId.ports, id: columnId.ports },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={(service) => [
-            service.getName(),
+            <WithTooltip>{service.getName()}</WithTooltip>,
             <KubeObjectStatusIcon key="icon" object={service} />,
             <NamespaceSelectBadge key="namespace" namespace={service.getNs()} />,
             service.getType(),
-            service.getClusterIp(),
-            service.getPorts().join(", "),
-            formatExternalIps(service),
-            service.getSelector().map((label) => <Badge key={label} label={label} />),
+            <WithTooltip>{service.getClusterIp()}</WithTooltip>,
+            <WithTooltip>{formatExternalIps(service)}</WithTooltip>,
+            <WithTooltip>{service.getPorts().join(", ")}</WithTooltip>,
             <KubeObjectAge key="age" object={service} />,
             { title: service.getStatus(), className: service.getStatus().toLowerCase() },
           ]}

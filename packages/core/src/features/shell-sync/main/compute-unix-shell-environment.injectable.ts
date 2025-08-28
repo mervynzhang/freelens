@@ -6,14 +6,16 @@
 
 import { loggerInjectionToken } from "@freelensapp/logger";
 import { object } from "@freelensapp/utilities";
-import type { AsyncResult } from "@freelensapp/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import spawnInjectable from "../../../main/child-process/spawn.injectable";
 import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";
-import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 import processEnvInjectable from "./env.injectable";
 import processExecPathInjectable from "./execPath.injectable";
+
+import type { AsyncResult } from "@freelensapp/utilities";
+
+import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 
 export interface UnixShellEnvOptions {
   signal: AbortSignal;
@@ -159,7 +161,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           try {
             const rawOutput = Buffer.concat(stdout).toString("utf-8");
 
-            logger.debug(`[UNIX-SHELL-ENV]: got the following output`, { rawOutput });
+            logger.silly(`[UNIX-SHELL-ENV]: got the following output`, { rawOutput });
 
             const matchedOutput = regex.exec(rawOutput)?.[1];
 

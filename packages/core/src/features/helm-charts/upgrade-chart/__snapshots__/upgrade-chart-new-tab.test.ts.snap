@@ -288,6 +288,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -306,6 +307,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -955,6 +957,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -973,6 +976,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -1266,7 +1270,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -1286,22 +1297,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -1311,7 +1347,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"
@@ -1725,6 +1768,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -1743,6 +1787,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -2036,7 +2081,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -2056,22 +2108,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -2081,7 +2158,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"
@@ -2549,6 +2633,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -2567,6 +2652,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -2860,7 +2946,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -2880,22 +2973,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -2905,7 +3023,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"
@@ -3371,6 +3496,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -3389,6 +3515,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -3682,7 +3809,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -3702,22 +3836,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -3727,7 +3886,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"
@@ -3949,6 +4115,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         aria-live="polite"
                         aria-relevant="additions text"
                         class="css-1f43avz-a11yText-A11yText"
+                        role="log"
                       />
                       <div
                         class="Select__control css-13cymwt-control"
@@ -3966,6 +4133,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                             data-value=""
                           >
                             <input
+                              aria-activedescendant=""
                               aria-autocomplete="list"
                               aria-expanded="false"
                               aria-haspopup="true"
@@ -4333,6 +4501,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -4351,6 +4520,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -4644,7 +4814,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -4664,22 +4841,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -4689,7 +4891,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"
@@ -4911,6 +5120,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         aria-live="polite"
                         aria-relevant="additions text"
                         class="css-1f43avz-a11yText-A11yText"
+                        role="log"
                       />
                       <div
                         class="Select__control css-13cymwt-control"
@@ -4928,6 +5138,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                             data-value=""
                           >
                             <input
+                              aria-activedescendant=""
                               aria-autocomplete="list"
                               aria-expanded="false"
                               aria-haspopup="true"
@@ -5297,6 +5508,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       aria-live="polite"
                       aria-relevant="additions text"
                       class="css-1f43avz-a11yText-A11yText"
+                      role="log"
                     />
                     <div
                       class="Select__control css-13cymwt-control"
@@ -5315,6 +5527,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           data-value=""
                         >
                           <input
+                            aria-activedescendant=""
                             aria-autocomplete="list"
                             aria-describedby="react-select-namespace-select-filter-placeholder"
                             aria-expanded="false"
@@ -5608,7 +5821,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell name"
                               >
-                                some-name
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-name
+                                </div>
+                                <div>
+                                  some-name
+                                </div>
                               </div>
                               <div
                                 class="TableCell namespace"
@@ -5628,22 +5848,47 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell chart"
                               >
-                                some-chart
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-chart
+                                </div>
+                                <div>
+                                  some-chart
+                                </div>
                               </div>
                               <div
                                 class="TableCell revision"
                               >
-                                NaN
+                                <div
+                                  class="badge flat"
+                                >
+                                  NaN
+                                </div>
                               </div>
                               <div
                                 class="TableCell version"
                               >
-                                1.0.0
+                                <div
+                                  class="badge flat"
+                                >
+                                  1.0.0
+                                </div>
+                                <div>
+                                  1.0.0
+                                </div>
                               </div>
                               <div
                                 class="TableCell app-version"
                               >
-                                some-app-version
+                                <div
+                                  class="badge flat"
+                                >
+                                  some-app-version
+                                </div>
+                                <div>
+                                  some-app-version
+                                </div>
                               </div>
                               <div
                                 class="TableCell some-status status"
@@ -5653,7 +5898,14 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell updated"
                               >
-                                NaNy
+                                <div
+                                  class="badge flat"
+                                >
+                                  0s
+                                </div>
+                                <div>
+                                  2025-01-01T00:00:00Z
+                                </div>
                               </div>
                               <div
                                 class="TableCell menu"

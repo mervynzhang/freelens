@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/electron-userland/electron-builder/refs/heads/master/packages/app-builder-lib/scheme.json
 
-electronVersion: 35.5.0 # datasource=npm depName=electron
+electronVersion: 35.7.5 # datasource=npm depName=electron
 
 ## Run `pnpm electron-rebuild` instead
 npmRebuild: false
@@ -17,7 +17,6 @@ files:
   - "!node_modules/@freelensapp/core/build"
   - "!node_modules/@freelensapp/core/static/build/library/fonts"
   - "!node_modules/electron"
-  - "!node_modules/win-ca/pem"
 
 ## Extra files added to unpacked resources
 extraResources:
@@ -47,6 +46,7 @@ linux:
       to: ./${arch}/freelens-k8s-proxy
     - from: binaries/client/linux/${arch}/helm
       to: ./${arch}/helm
+  publish: null
 
 appImage:
   executableArgs:
@@ -132,6 +132,7 @@ mac:
       to: ./${arch}/freelens-k8s-proxy
     - from: binaries/client/darwin/${arch}/helm
       to: ./${arch}/helm
+  publish: null
 
 pkg:
   license: build/license.txt
@@ -148,6 +149,10 @@ win:
       to: ./${arch}/freelens-k8s-proxy.exe
     - from: binaries/client/windows/${arch}/helm.exe
       to: ./${arch}/helm.exe
+  publish: null
+
+msi:
+  perMachine: false
 
 nsis:
   include: build/installer.nsh

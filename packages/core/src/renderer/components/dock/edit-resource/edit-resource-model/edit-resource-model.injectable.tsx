@@ -4,23 +4,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import assert from "assert";
 import { createKubeApiURL, parseKubeApi } from "@freelensapp/kube-api";
-import type { KubeObject, RawKubeObject } from "@freelensapp/kube-object";
-import type { ShowNotification } from "@freelensapp/notifications";
 import { showErrorNotificationInjectable, showSuccessNotificationInjectable } from "@freelensapp/notifications";
 import { waitUntilDefined } from "@freelensapp/utilities";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import assert from "assert";
 import yaml from "js-yaml";
 import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { createPatch } from "rfc6902";
-import type { EditResourceTabStore, EditingResource } from "../store";
+import { defaultYamlDumpOptions } from "../../../../../common/kube-helpers";
 import editResourceTabStoreInjectable from "../store.injectable";
-import type { RequestKubeResource } from "./request-kube-resource.injectable";
 import requestKubeResourceInjectable from "./request-kube-resource.injectable";
-import type { RequestPatchKubeResource } from "./request-patch-kube-resource.injectable";
 import requestPatchKubeResourceInjectable from "./request-patch-kube-resource.injectable";
+
+import type { KubeObject, RawKubeObject } from "@freelensapp/kube-object";
+import type { ShowNotification } from "@freelensapp/notifications";
+
+import type { EditingResource, EditResourceTabStore } from "../store";
+import type { RequestKubeResource } from "./request-kube-resource.injectable";
+import type { RequestPatchKubeResource } from "./request-patch-kube-resource.injectable";
 
 const editResourceModelInjectable = getInjectable({
   id: "edit-resource-model",
@@ -166,9 +169,7 @@ export class EditResourceModel {
     }
 
     runInAction(() => {
-      this.editingResource.firstDraft = yaml.dump(resource.toPlainObject(), {
-        sortKeys: true,
-      });
+      this.editingResource.firstDraft = yaml.dump(resource.toPlainObject(), defaultYamlDumpOptions);
     });
   };
 
@@ -222,7 +223,7 @@ export class EditResourceModel {
     );
 
     runInAction(() => {
-      this.editingResource.firstDraft = yaml.dump(currentVersion);
+      this.editingResource.firstDraft = yaml.dump(currentVersion, defaultYamlDumpOptions);
       this.editingResource.resource = selfLink;
     });
 

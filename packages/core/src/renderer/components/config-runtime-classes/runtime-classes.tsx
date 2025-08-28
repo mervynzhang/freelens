@@ -6,18 +6,21 @@
 
 import "./runtime-classes.scss";
 
-import type { RuntimeClass } from "@freelensapp/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import autoBindReact from "auto-bind/react";
 import { observer } from "mobx-react";
 import * as React from "react";
-import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { KubeObjectAge } from "../kube-object/age";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { KubeObjectAge } from "../kube-object/age";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
-import type { RuntimeClassStore } from "./store";
+import { WithTooltip } from "../with-tooltip";
 import runtimeClassStoreInjectable from "./store.injectable";
+
+import type { RuntimeClass } from "@freelensapp/kube-object";
+
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import type { RuntimeClassStore } from "./store";
 
 enum columnId {
   name = "name",
@@ -62,9 +65,9 @@ class NonInjectedRuntimeClasses extends React.Component<RuntimeClassesProps & De
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(rc) => [
-            rc.getName(),
+            <WithTooltip>{rc.getName()}</WithTooltip>,
             <KubeObjectStatusIcon key="icon" object={rc} />,
-            rc.getHandler(),
+            <WithTooltip>{rc.getHandler()}</WithTooltip>,
             <KubeObjectAge key="age" object={rc} />,
           ]}
         />
