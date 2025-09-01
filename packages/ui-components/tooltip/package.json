@@ -45,11 +45,11 @@
     "@freelensapp/jest": "workspace:^",
     "@freelensapp/typescript": "workspace:^",
     "@freelensapp/webpack": "workspace:^",
-    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.20",
-    "@types/react": "^17.0.87",
+    "@types/react": "^17.0.88",
     "@types/react-dom": "^17.0.26",
     "css-loader": "^6.11.0",
     "identity-obj-proxy": "^3.0.0",
@@ -58,8 +58,8 @@
     "postcss-loader": "^8.1.1",
     "sass-loader": "^16.0.5",
     "ts-jest": "^29.4.1",
-    "ts-loader": "^9.5.2",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.2",
-    "webpack": "^5.101.2"
+    "webpack": "^5.101.3"
   }
 }
